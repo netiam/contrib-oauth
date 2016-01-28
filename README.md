@@ -10,8 +10,7 @@
 
 ```js
 netiam()
-  .data({hello: 'world'})
-  .oauth()
+  .oauth({model: User})
   .json()
 ```
 
