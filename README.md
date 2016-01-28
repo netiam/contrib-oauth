@@ -10,7 +10,11 @@
 
 ```js
 netiam()
-  .oauth({model: User})
+  .oauth({
+    userModel: User,
+		tokenModel: Token,
+		clientModel: Client
+  })
   .json()
 ```
 
