@@ -11,3 +11,7 @@ node_modules/
 # lib
 coverage/
 lib/
+
+# test
+test/db.sqlite
+
