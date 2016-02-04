@@ -15,18 +15,30 @@
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bcrypt-as-promised": "^1.1.0",
+    "lodash": "^4.2.1",
+    "moment": "^2.11.2",
+    "netiam-errors": "^3.3.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.2.0",
     "babel-eslint": "^4.1.6",
     "babel-preset-es2015-node5": "^1.1.0",
+    "bcrypt-as-promised": "^1.1.0",
+    "body-parser": "^1.14.2",
     "codeclimate-test-reporter": "0.1.1",
     "eslint": "1.10.3",
     "express": "^4.13.3",
     "istanbul": "0.4.1",
     "mocha": "^2.3.4",
+    "moment": "^2.11.1",
+    "netiam": "^7.3.0",
+    "netiam-contrib-json": "^1.0.1",
     "semantic-release": "4.3.5",
+    "sequelize": "^3.19.1",
     "should": "^8.1.1",
+    "sqlite3": "^3.1.1",
     "supertest": "1.1.0"
   },
   "repository": {
