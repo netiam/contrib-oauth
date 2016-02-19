@@ -69,11 +69,12 @@ export default function({
           return Promise
             .all([accessToken, refreshToken])
             .then(tokens => {
+              const [accessToken, refreshToken] = tokens
               res.body = {
-                access_token: tokens[0][tokenField],
-                refresh_token: tokens[1][tokenField],
+                access_token: accessToken[tokenField],
+                refresh_token: refreshToken[tokenField],
                 token_type: ACCESS_TOKEN_TYPE_BEARER,
-                expires_in: moment(tokens[0].expires_at).diff(moment(), 'seconds'),
+                expires_in: moment(accessToken.expires_at).diff(moment(), 'seconds'),
                 user_id: owner.id
               }
             })

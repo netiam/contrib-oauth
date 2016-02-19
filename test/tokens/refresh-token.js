@@ -45,6 +45,14 @@ describe('netiam-contrib', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
+        res.body.should.have.properties([
+          'access_token',
+          'refresh_token',
+          'token_type',
+          'expires_in',
+          'user_id'
+        ])
+        res.body.expires_in.should.be.above(3000)
         refreshToken = res.body.refresh_token
       })
       .end(done)
@@ -69,6 +77,7 @@ describe('netiam-contrib', () => {
           'expires_in',
           'user_id'
         ])
+        res.body.expires_in.should.be.above(3000)
       })
       .end(done)
   })
