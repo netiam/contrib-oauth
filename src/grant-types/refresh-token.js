@@ -36,6 +36,7 @@ export default function({
   }
 
   return tokenModel
+  // TODO Check expiration date
     .findOne({
       where: {[tokenField]: refresh_token}
     })
@@ -56,15 +57,15 @@ export default function({
           const accessToken = tokenModel
             .build({
               type: TOKEN_TYPE_ACCESS,
-              expires_at: moment().add(accessTokenTTL, 'hours').format()
+              expires_at: moment().add(accessTokenTTL, 'hours').format(),
+              ownerId: owner.id
             })
-            .setOwner(owner)
           const refreshToken = tokenModel
             .build({
               type: TOKEN_TYPE_REFRESH,
-              expires_at: moment().add(refreshTokenTTL, 'days').format()
+              expires_at: moment().add(refreshTokenTTL, 'days').format(),
+              ownerId: owner.id
             })
-            .setOwner(owner)
 
           return Promise
             .all([accessToken, refreshToken])

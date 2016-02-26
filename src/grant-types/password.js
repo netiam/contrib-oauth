@@ -71,21 +71,20 @@ export default function({
       }
 
       return bcrypt
-
         .compare(password, user[passwordField])
         .then(() => {
           const accessToken = tokenModel
             .create({
               type: TOKEN_TYPE_ACCESS,
-              expires_at: moment().add(accessTokenTTL, 'hours').format()
+              expires_at: moment().add(accessTokenTTL, 'hours').format(),
+              ownerId: user.id
             })
-            .then(token => token.setOwner(user))
           const refreshToken = tokenModel
             .create({
               type: TOKEN_TYPE_REFRESH,
-              expires_at: moment().add(refreshTokenTTL, 'days').format()
+              expires_at: moment().add(refreshTokenTTL, 'days').format(),
+              ownerId: user.id
             })
-            .then(token => token.setOwner(user))
 
           return Promise
             .all([accessToken, refreshToken])
@@ -110,6 +109,10 @@ export default function({
               state
             })
           )
+        })
+        .catch(err => {
+          console.log(err)
+          throw err
         })
     })
 }

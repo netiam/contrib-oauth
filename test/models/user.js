@@ -57,6 +57,7 @@ const User = db.define('User', {
   }
 })
 
+User.hasMany(Token, {as: 'owner'})
 Token.belongsTo(User, {as: 'owner'})
 
 export default User
