@@ -19,7 +19,7 @@
     "bcrypt-as-promised": "^1.1.0",
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
-    "netiam-errors": "^3.3.0"
+    "netiam-errors": "^4.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.2.0",
