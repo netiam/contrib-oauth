@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import bcrypt from 'bcrypt-as-promised'
+import {HTTPError} from 'netiam-errors'
 import moment from 'moment'
 import Promise from 'bluebird'
 import {
-  Codes,
-  OAuthError
-} from 'netiam-errors'
+  OAUTH_INVALID_REFRESH_TOKEN
+} from '../errors'
 
 const TOKEN_TYPE_ACCESS = 'access_token'
 const TOKEN_TYPE_REFRESH = 'refresh_token'
@@ -25,31 +25,15 @@ export default function({
     scope} = req.body
 
   if (!_.isString(refresh_token) || refresh_token.length === 0) {
-    return Promise.reject(
-      new OAuthError({
-        status: 400,
-        code: Codes.E4001,
-        description: `Invalid "refresh_token"`,
-        uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`
-      })
-    )
+    return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN))
   }
 
   return tokenModel
   // TODO Check expiration date
-    .findOne({
-      where: {[tokenField]: refresh_token}
-    })
+    .findOne({where: {[tokenField]: refresh_token}})
     .then(token => {
       if (!token) {
-        return Promise.reject(
-          new OAuthError({
-            status: 400,
-            code: Codes.E4001,
-            description: `The "refresh_token" used to issue a new token does not exist.`,
-            uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`
-          })
-        )
+        return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN))
       }
 
       return token.getOwner()

@@ -1,11 +1,15 @@
 import Promise from 'bluebird'
-import {
-  Codes,
-  HTTPError,
-  OAuthError
-} from 'netiam-errors'
 import grantPassword from './grant-types/password'
 import grantRefreshToken from './grant-types/refresh-token'
+import {
+  OAuthError,
+  OAUTH_INVALID_HTTP_METHOD,
+  OAUTH_CLIENT_ID_MISSING,
+  OAUTH_UNSUPPORTED_RESPONSE_TYPE,
+  OAUTH_INVALID_CLIENT,
+  OAUTH_GRANT_TYPE_MISSING,
+  OAUTH_UNSUPPORTED_GRANT_TYPE
+} from './errors'
 
 const RESPONSE_TYPE_CODE = 'code'
 const RESPONSE_TYPE_TOKEN = 'token'
@@ -19,13 +23,7 @@ function authorize({userModel, clientModel, tokenModel, codeModel}) {
 
   return function(req, res) {
     if (req.method !== 'GET' && req.method !== 'POST') {
-      return Promise.reject(
-        new OAuthError({
-          status: 400,
-          code: Codes.E4001,
-          description: `Invalid HTTP method: "${req.method()}"`
-        })
-      )
+      return Promise.reject(new OAuthError(OAUTH_INVALID_HTTP_METHOD))
     }
 
     const {
@@ -36,58 +34,26 @@ function authorize({userModel, clientModel, tokenModel, codeModel}) {
       state} = Object.assign({}, req.query, req.body)
 
     if (!client_id || client_id.length === 0) {
-      return Promise.reject(
-        new OAuthError({
-          status: 400,
-          code: Codes.E4002,
-          description: `The client identifier is missing`,
-          uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4002.type}`,
-          state
-        })
-      )
+      return Promise.reject(new OAuthError(OAUTH_CLIENT_ID_MISSING))
     }
 
     if (response_type !== RESPONSE_TYPE_CODE
       && response_type !== RESPONSE_TYPE_TOKEN) {
-      return Promise.reject(
-        new OAuthError({
-          status: 400,
-          code: Codes.E4007,
-          description: `You have requested an unkown response_type: "${response_type}"`,
-          uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4007.type}`,
-          state
-        })
-      )
+      return Promise.reject(new OAuthError(OAUTH_UNSUPPORTED_RESPONSE_TYPE))
     }
 
     return clientModel
       .findOne({where: {id: client_id}})
       .then(client => {
         if (!client) {
-          return Promise.reject(
-            new OAuthError({
-              status: 400,
-              code: Codes.E4002,
-              description: `Client does not exist: "${client_id}"`,
-              uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4002.type}`,
-              state
-            })
-          )
+          return Promise.reject(new OAuthError(OAUTH_INVALID_CLIENT))
         }
         // TODO check response_type and issue a code or a token
         return codeModel.create({client})
       })
       .then(code => {
         if (!code) {
-          return Promise.reject(
-            new OAuthError({
-              status: 500,
-              code: Codes.E4009,
-              description: `Cannot issue a code. Please try again later`,
-              uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4009.type}`,
-              state
-            })
-          )
+          return Promise.reject(new OAuthError(OAUTH_INVALID_CLIENT))
         }
 
         // TODO Redirect if not implicit flow and add code to URI
@@ -111,23 +77,11 @@ function token({userModel, clientModel, tokenModel, codeModel}) {
     const {grant_type} = req.body
 
     if (req.method !== 'POST') {
-      return Promise.reject(
-        new OAuthError({
-          status: 400,
-          code: Codes.E4001,
-          description: `Invalid HTTP method: "${req.method()}"`
-        })
-      )
+      return Promise.reject(new OAuthError(OAUTH_INVALID_HTTP_METHOD))
     }
 
     if (!grant_type) {
-      return Promise.reject(
-        new OAuthError({
-          status: 400,
-          code: Codes.E4001,
-          description: `Parameter "grant_type" is missing`
-        })
-      )
+      return Promise.reject(new OAuthError(OAUTH_GRANT_TYPE_MISSING))
     }
 
     if (grant_type === GRANT_TYPE_PASSWORD) {
@@ -158,13 +112,7 @@ function token({userModel, clientModel, tokenModel, codeModel}) {
       })
     }
 
-    return Promise.reject(
-      new OAuthError({
-        status: 500,
-        code: Codes.E4005,
-        description: `Please use a different grant-type than "${grant_type}". It is not supported at the moment.`
-      })
-    )
+    return Promise.reject(new OAuthError(OAUTH_UNSUPPORTED_GRANT_TYPE))
   }
 
 }

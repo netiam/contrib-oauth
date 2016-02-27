@@ -1,11 +1,14 @@
 import _ from 'lodash'
 import bcrypt from 'bcrypt-as-promised'
+import {HTTPError} from 'netiam-errors'
 import moment from 'moment'
 import Promise from 'bluebird'
 import {
-  Codes,
-  OAuthError
-} from 'netiam-errors'
+  OAUTH_INVALID_CREDENTIALS,
+  OAUTH_INVALID_PASSWORD,
+  OAUTH_PASSWORD_MISSING,
+  OAUTH_USERNAME_MISSING
+} from '../errors'
 
 const TOKEN_TYPE_ACCESS = 'access_token'
 const TOKEN_TYPE_REFRESH = 'refresh_token'
@@ -30,44 +33,18 @@ export default function({
     state} = req.body
 
   if (!_.isString(username) || username.length === 0) {
-    return Promise.reject(
-      new OAuthError({
-        status: 400,
-        code: Codes.E4001,
-        description: `Username is missing.`,
-        uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`,
-        state
-      })
-    )
+    return Promise.reject(new HTTPError(OAUTH_USERNAME_MISSING))
   }
 
   if (!_.isString(password) || password.length === 0) {
-    return Promise.reject(
-      new OAuthError({
-        status: 400,
-        code: Codes.E4001,
-        description: `Password is missing.`,
-        uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`,
-        state
-      })
-    )
+    return Promise.reject(new HTTPError(OAUTH_PASSWORD_MISSING))
   }
 
   return userModel
-    .findOne({
-      where: {[usernameField]: username}
-    })
+    .findOne({where: {[usernameField]: username}})
     .then(user => {
       if (!user) {
-        return Promise.reject(
-          new OAuthError({
-            status: 400,
-            code: Codes.E4001,
-            description: `Either username or password is wrong.`,
-            uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`,
-            state
-          })
-        )
+        return Promise.reject(new HTTPError(OAUTH_INVALID_CREDENTIALS))
       }
 
       return bcrypt
@@ -99,20 +76,7 @@ export default function({
               }
             })
         })
-        .catch(bcrypt.MISMATCH_ERROR, () => {
-          return Promise.reject(
-            new OAuthError({
-              status: 400,
-              code: Codes.E4001,
-              description: `Invalid password.`,
-              uri: `${req.get('host')}/v2/oauth/error?code=${Codes.E4001.type}`,
-              state
-            })
-          )
-        })
-        .catch(err => {
-          console.log(err)
-          throw err
-        })
+        .catch(bcrypt.MISMATCH_ERROR, () => Promise.reject(new HTTPError(OAUTH_INVALID_PASSWORD)))
+        .catch(() => Promise.reject(new HTTPError(OAUTH_USERNAME_MISSING)))
     })
 }

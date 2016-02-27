@@ -48,8 +48,7 @@ describe('netiam-contrib', () => {
       .expect(res => {
         res.body.should.have.properties([
           'error',
-          'error_description',
-          'error_uri'
+          'error_description'
         ])
         res.body.error.should.eql('unsupported_response_type')
       })
@@ -67,8 +66,7 @@ describe('netiam-contrib', () => {
       .expect(res => {
         res.body.should.have.properties([
           'error',
-          'error_description',
-          'error_uri'
+          'error_description'
         ])
         res.body.error.should.eql('unsupported_response_type')
       })
@@ -84,8 +82,7 @@ describe('netiam-contrib', () => {
       .expect(res => {
         res.body.should.have.properties([
           'error',
-          'error_description',
-          'error_uri'
+          'error_description'
         ])
         res.body.error.should.eql('invalid_client')
       })
@@ -106,8 +103,7 @@ describe('netiam-contrib', () => {
       .expect(res => {
         res.body.should.have.properties([
           'error',
-          'error_description',
-          'error_uri'
+          'error_description'
         ])
         res.body.error.should.eql('invalid_client')
       })
