@@ -23,8 +23,6 @@ notifications:
   email: false
 node_js:
   - "5"
-before_script:
-  - npm prune
 script:
   - npm run build
   - npm run test:coverage
