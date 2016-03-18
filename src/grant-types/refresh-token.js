@@ -39,13 +39,13 @@ export default function({
       return token.getOwner()
         .then(owner => {
           const accessToken = tokenModel
-            .build({
+            .create({
               type: TOKEN_TYPE_ACCESS,
               expires_at: moment().add(accessTokenTTL, 'hours').format(),
               ownerId: owner.id
             })
           const refreshToken = tokenModel
-            .build({
+            .create({
               type: TOKEN_TYPE_REFRESH,
               expires_at: moment().add(refreshTokenTTL, 'days').format(),
               ownerId: owner.id
