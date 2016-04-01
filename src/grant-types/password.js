@@ -77,6 +77,6 @@ export default function({
             })
         })
         .catch(bcrypt.MISMATCH_ERROR, () => Promise.reject(new HTTPError(OAUTH_INVALID_PASSWORD)))
-        .catch(() => Promise.reject(new HTTPError(OAUTH_USERNAME_MISSING)))
+        .catch(() => Promise.reject(new HTTPError(OAUTH_INVALID_CREDENTIALS)))
     })
 }
