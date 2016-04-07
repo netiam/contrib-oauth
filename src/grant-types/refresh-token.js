@@ -18,11 +18,13 @@ export default function({
   tokenModel,
   tokenField,
   accessTokenTTL,
-  refreshTokenTTL
-  }) {
+  refreshTokenTTL,
+  destroyTokenAfterUse = true
+}) {
   const {
     refresh_token,
-    scope} = req.body
+    scope
+  } = req.body
 
   if (!_.isString(refresh_token) || refresh_token.length === 0) {
     return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN))
@@ -51,7 +53,7 @@ export default function({
               ownerId: owner.id
             })
 
-          return Promise
+          const pair = Promise
             .all([accessToken, refreshToken])
             .then(tokens => {
               const [accessToken, refreshToken] = tokens
@@ -63,7 +65,12 @@ export default function({
                 user_id: owner.id
               }
             })
-            .then(() => token.destroy())
+
+          if (destroyTokenAfterUse) {
+            return pair.then(() => token.destroy())
+          }
+
+          return pair
         })
     })
 }

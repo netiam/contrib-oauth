@@ -31,7 +31,8 @@ function authorize({userModel, clientModel, tokenModel, codeModel}) {
       client_id,
       redirect_uri,
       scope,
-      state} = Object.assign({}, req.query, req.body)
+      state
+    } = Object.assign({}, req.query, req.body)
 
     if (!client_id || client_id.length === 0) {
       return Promise.reject(new OAuthError(OAUTH_CLIENT_ID_MISSING))
@@ -65,13 +66,19 @@ function authorize({userModel, clientModel, tokenModel, codeModel}) {
   }
 }
 
-function token({userModel, clientModel, tokenModel, codeModel}) {
+function token({
+  userModel,
+  clientModel,
+  tokenModel,
+  codeModel,
+  accessTokenTTL = 1,
+  refreshTokenTTL = 14,
+  destroyTokenAfterUse = false
+}) {
   // TODO Must be set by plugin config or defaults!
   const usernameField = 'email'
   const passwordField = 'password'
   const tokenField = 'token'
-  const accessTokenTTL = 1 // hours
-  const refreshTokenTTL = 14 // days
 
   return function(req, res) {
     const {grant_type} = req.body
@@ -108,7 +115,8 @@ function token({userModel, clientModel, tokenModel, codeModel}) {
         userModel,
         tokenField,
         accessTokenTTL,
-        refreshTokenTTL
+        refreshTokenTTL,
+        destroyTokenAfterUse
       })
     }
 
