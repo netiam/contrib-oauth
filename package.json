@@ -35,7 +35,7 @@
     "netiam-contrib-json": "^1.0.1",
     "semantic-release": "4.3.5",
     "sequelize": "^3.19.2",
-    "should": "^9.0.0",
+    "should": "^10.0.0",
     "sqlite3": "^3.1.1",
     "supertest": "1.2.0"
   },
