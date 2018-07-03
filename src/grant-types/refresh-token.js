@@ -1,16 +1,16 @@
-import _ from 'lodash'
-import bcrypt from 'bcrypt-as-promised'
-import {HTTPError} from 'netiam-errors'
-import moment from 'moment'
-import Promise from 'bluebird'
+import _ from 'lodash';
+import bcrypt from 'bcrypt-as-promised';
+import {HTTPError} from 'netiam-errors';
+import moment from 'moment';
+import Promise from 'bluebird';
 import {
   OAUTH_INVALID_REFRESH_TOKEN
-} from '../errors'
+} from '../errors';
 
-const TOKEN_TYPE_ACCESS = 'access_token'
-const TOKEN_TYPE_REFRESH = 'refresh_token'
+const TOKEN_TYPE_ACCESS = 'access_token';
+const TOKEN_TYPE_REFRESH = 'refresh_token';
 
-const ACCESS_TOKEN_TYPE_BEARER = 'bearer'
+const ACCESS_TOKEN_TYPE_BEARER = 'bearer';
 
 export default function({
   req,
@@ -24,10 +24,10 @@ export default function({
   const {
     refresh_token,
     scope
-  } = req.body
+  } = req.body;
 
   if (!_.isString(refresh_token) || refresh_token.length === 0) {
-    return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN))
+    return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN));
   }
 
   return tokenModel
@@ -35,7 +35,7 @@ export default function({
     .findOne({where: {[tokenField]: refresh_token}})
     .then(token => {
       if (!token) {
-        return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN))
+        return Promise.reject(new HTTPError(OAUTH_INVALID_REFRESH_TOKEN));
       }
 
       return token.getOwner()
@@ -45,32 +45,32 @@ export default function({
               type: TOKEN_TYPE_ACCESS,
               expires_at: moment().add(accessTokenTTL, 'hours').format(),
               ownerId: owner.id
-            })
+            });
           const refreshToken = tokenModel
             .create({
               type: TOKEN_TYPE_REFRESH,
               expires_at: moment().add(refreshTokenTTL, 'days').format(),
               ownerId: owner.id
-            })
+            });
 
           const pair = Promise
             .all([accessToken, refreshToken])
             .then(tokens => {
-              const [accessToken, refreshToken] = tokens
+              const [accessToken, refreshToken] = tokens;
               res.body = {
                 access_token: accessToken[tokenField],
                 refresh_token: refreshToken[tokenField],
                 token_type: ACCESS_TOKEN_TYPE_BEARER,
                 expires_in: moment(accessToken.expires_at).diff(moment(), 'seconds'),
                 user_id: owner.id
-              }
-            })
+              };
+            });
 
           if (destroyTokenAfterUse) {
-            return pair.then(() => token.destroy())
+            return pair.then(() => token.destroy());
           }
 
-          return pair
-        })
-    })
+          return pair;
+        });
+    });
 }
