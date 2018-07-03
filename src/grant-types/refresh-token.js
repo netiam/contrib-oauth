@@ -1,8 +1,6 @@
 import _ from 'lodash';
-import bcrypt from 'bcrypt';
 import { HTTPError } from 'netiam-errors';
 import moment from 'moment';
-import Promise from 'bluebird';
 import { OAUTH_INVALID_REFRESH_TOKEN } from '../errors';
 
 const TOKEN_TYPE_ACCESS = 'access_token';

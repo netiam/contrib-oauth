@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import grantPassword from './grant-types/password';
 import grantRefreshToken from './grant-types/refresh-token';
 import {
