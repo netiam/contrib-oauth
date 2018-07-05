@@ -1,20 +1,14 @@
 {
-  "ecmaFeatures": {
-    "modules": true
-  },
   "rules": {
-    "semi": [
-      2,
-      "never"
-    ]
+    "quotes": [2, "single"],
+    "semi": [2, "always"]
   },
   "env": {
     "node": true,
-    "mocha": true,
-    "es6": true
+    "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2017,
     "sourceType": "module"
   }
 }
