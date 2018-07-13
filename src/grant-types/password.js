@@ -38,8 +38,8 @@ export default function({
   return userModel.findOne({ where: { [usernameField]: username } }).then(async (user) => {
     if (!user) return Promise.reject(new HTTPError(OAUTH_INVALID_CREDENTIALS));
 
-    const match = await bcrypt.compare(password, user[passwordField])
-    if (!match) return Promise.reject(new HTTPError(OAUTH_INVALID_PASSWORD))
+    const match = await bcrypt.compare(password, user[passwordField]);
+    if (!match) return Promise.reject(new HTTPError(OAUTH_INVALID_PASSWORD));
 
     const accessToken = tokenModel.create({
       type: TOKEN_TYPE_ACCESS,
