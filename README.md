@@ -19,6 +19,10 @@ netiam()
   .json()
 ```
 
+## Attention
+
+Do not use `2.0`. Wrong passwords result in an positive match!
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
