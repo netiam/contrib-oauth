@@ -25,7 +25,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "body-parser": "^1.14.2",
-    "codeclimate-test-reporter": "0.5.0",
+    "codeclimate-test-reporter": "0.5.1",
     "eslint": "5.0.1",
     "express": "^4.13.3",
     "istanbul": "0.4.5",
