@@ -5,8 +5,6 @@ cache:
     - node_modules
 notifications:
   email: false
-before_script:
-  - npm prune
 script:
   - npm run build
   - npm run test:coverage
