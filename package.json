@@ -13,7 +13,8 @@
     "test:watch": "mocha --watch",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
     "watch": "./bin/watch",
-    "semantic-release": "npx semantic-release"
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
     "bcrypt": "^3.0.0",
@@ -32,11 +33,12 @@
     "moment": "^2.22.2",
     "netiam": "^8.0.0",
     "netiam-contrib-json": "^1.0.1",
-    "semantic-release": "^15.10.3",
+    "semantic-release": "^15.10.4",
     "sequelize": "^4.0.0",
     "should": "^13.1.1",
     "sqlite3": "^4.0.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "travis-deploy-once": "^5.0.9"
   },
   "repository": {
     "type": "git",
@@ -60,5 +62,6 @@
   "engines": {
     "node": ">=10",
     "npm": ">=6"
-  }
+  },
+  "version": "0.0.0-development"
 }
