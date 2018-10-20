@@ -33,7 +33,7 @@
     "moment": "^2.22.2",
     "netiam": "^8.0.0",
     "netiam-contrib-json": "^1.0.1",
-    "semantic-release": "^15.10.4",
+    "semantic-release": "^15.10.5",
     "sequelize": "^4.0.0",
     "should": "^13.1.1",
     "sqlite3": "^4.0.0",
