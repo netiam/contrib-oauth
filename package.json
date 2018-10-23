@@ -31,7 +31,7 @@
     "istanbul": "0.4.5",
     "mocha": "^5.0.0",
     "moment": "^2.22.2",
-    "netiam": "^8.0.0",
+    "netiam": "^8.0.2",
     "netiam-contrib-json": "^1.0.1",
     "semantic-release": "^15.10.4",
     "sequelize": "^4.0.0",
